@@ -334,7 +334,12 @@ flatMap[rootId].children = rootChildren;
 
 // Save output
 const totalNodes = Object.keys(flatMap).length;
-const outPath = path.resolve(__dirname, '../data/fileTree.json');
+// Create data directory if it doesn't exist
+const dataDir = path.resolve(__dirname, '../data');
+if (!fs.existsSync(dataDir)) {
+  fs.mkdirSync(dataDir, { recursive: true });
+}
+const outPath = path.resolve(dataDir, 'fileTree.json');
 fs.writeFileSync(outPath, JSON.stringify(flatMap, null, 2));
 
 console.log(`✅ Done! Generated ${totalNodes} nodes`);
