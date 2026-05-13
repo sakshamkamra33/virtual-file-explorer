@@ -1,0 +1,18 @@
+# Dependencies
+node_modules/
+client/node_modules/
+server/node_modules/
+
+# Build
+client/dist/
+
+# Environment
+.env
+.env.local
+
+# Data (regenerate with npm run generate)
+server/data/fileTree.json
+
+# OS
+.DS_Store
+Thumbs.db
