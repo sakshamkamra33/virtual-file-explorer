@@ -12,7 +12,11 @@ const PORT = process.env.PORT || 5000;
 
 // ─── Middleware ───────────────────────────────────────
 app.use(cors({
-  origin: 'http://localhost:5173', // React dev server
+  origin: [
+    'http://localhost:5173',
+    'https://file-explorer-sakshamkamra33.vercel.app',
+    /\.vercel\.app$/,
+  ],
   methods: ['GET'],
 }));
 app.use(express.json());

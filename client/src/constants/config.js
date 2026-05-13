@@ -1,7 +1,7 @@
 // client/src/constants/config.js
 
 const config = {
-  API_BASE_URL: 'http://localhost:5000/api',
+  API_BASE_URL: import.meta.env.VITE_API_URL || 'https://file-explorer-api.onrender.com/api',
   ENDPOINTS: {
     ROOT: '/files/root',
     FILES: '/files',
@@ -10,11 +10,11 @@ const config = {
     HEALTH: '/health',
   },
   VIRTUAL_SCROLL: {
-    ITEM_HEIGHT: 36,        // height of each row in px
-    OVERSCAN: 10,           // extra rows rendered above/below viewport
+    ITEM_HEIGHT: 36,
+    OVERSCAN: 10,
   },
   SEARCH: {
-    DEBOUNCE_MS: 300,       // wait 300ms after typing before searching
+    DEBOUNCE_MS: 300,
     MAX_RESULTS: 50,
   },
 };
