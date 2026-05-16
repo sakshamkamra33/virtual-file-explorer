@@ -40,7 +40,7 @@ const FileDetails = () => {
       height: '100%',
       display: 'flex',
       flexDirection: 'column',
-      background: '#111',
+      background: 'transparent', // Let the glow show through
     }}>
       {/* Breadcrumb */}
       <Breadcrumb path={node.path} />
@@ -54,29 +54,35 @@ const FileDetails = () => {
           alignItems: 'center',
           gap: '12px',
           marginBottom: '32px',
-          padding: '24px',
-          background: '#1a1a1a',
-          borderRadius: '12px',
-          border: '1px solid #2a2a2a',
+          padding: '32px 24px',
+          background: 'rgba(255, 255, 255, 0.03)',
+          backdropFilter: 'blur(20px)',
+          WebkitBackdropFilter: 'blur(20px)',
+          borderRadius: '16px',
+          border: '1px solid rgba(255, 255, 255, 0.08)',
+          boxShadow: '0 8px 32px rgba(0, 0, 0, 0.2)',
+          transition: 'all 0.3s ease'
         }}>
-          <span style={{ fontSize: '64px' }}>{icon}</span>
+          <span style={{ fontSize: '72px', filter: 'drop-shadow(0 8px 16px rgba(0,0,0,0.4))' }}>{icon}</span>
           <div style={{
-            fontSize: '16px',
+            fontSize: '20px',
             color: '#fff',
-            fontWeight: 600,
+            fontWeight: 700,
             textAlign: 'center',
             wordBreak: 'break-all',
+            letterSpacing: '-0.5px'
           }}>
             {node.name}
           </div>
           {fileType && (
             <span style={{
               fontSize: '12px',
-              padding: '3px 10px',
-              borderRadius: '12px',
+              padding: '4px 12px',
+              borderRadius: '20px',
               background: fileType.color + '22',
               color: fileType.color,
-              fontWeight: 500,
+              fontWeight: 600,
+              border: `1px solid ${fileType.color}44`
             }}>
               {fileType.label}
             </span>
@@ -84,10 +90,12 @@ const FileDetails = () => {
           {isFolder && (
             <span style={{
               fontSize: '12px',
-              padding: '3px 10px',
-              borderRadius: '12px',
-              background: '#61dafb22',
+              padding: '4px 12px',
+              borderRadius: '20px',
+              background: 'rgba(97, 218, 251, 0.1)',
               color: '#61dafb',
+              fontWeight: 600,
+              border: '1px solid rgba(97, 218, 251, 0.2)'
             }}>
               Folder • {node.children?.length || 0} items
             </span>
@@ -98,11 +106,11 @@ const FileDetails = () => {
         <div style={{
           display: 'flex',
           flexDirection: 'column',
-          gap: '1px',
-          background: '#2a2a2a',
-          borderRadius: '8px',
+          background: 'rgba(0, 0, 0, 0.2)',
+          backdropFilter: 'blur(10px)',
+          borderRadius: '12px',
           overflow: 'hidden',
-          border: '1px solid #2a2a2a',
+          border: '1px solid rgba(255, 255, 255, 0.05)',
         }}>
           {[
             { label: 'Name', value: node.name },
@@ -114,22 +122,25 @@ const FileDetails = () => {
           ].filter(Boolean).map((item, i) => (
             <div key={i} style={{
               display: 'flex',
-              background: i % 2 === 0 ? '#161616' : '#1a1a1a',
-              padding: '10px 14px',
+              padding: '14px 18px',
+              borderBottom: i !== 5 ? '1px solid rgba(255, 255, 255, 0.05)' : 'none',
               gap: '12px',
             }}>
               <span style={{
-                fontSize: '12px',
-                color: '#555',
-                minWidth: '80px',
-                fontWeight: 500,
+                fontSize: '13px',
+                color: '#888',
+                minWidth: '90px',
+                fontWeight: 600,
+                textTransform: 'uppercase',
+                letterSpacing: '0.5px'
               }}>
                 {item.label}
               </span>
               <span style={{
-                fontSize: '12px',
-                color: '#aaa',
+                fontSize: '13px',
+                color: '#e0e0e0',
                 wordBreak: 'break-all',
+                fontWeight: 500
               }}>
                 {item.value || '--'}
               </span>

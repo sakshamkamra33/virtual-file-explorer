@@ -12,6 +12,7 @@ client/dist/
 
 # Data (regenerate with npm run generate)
 server/data/fileTree.json
+server/data/fileTree.pack
 
 # OS
 .DS_Store

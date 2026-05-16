@@ -1,7 +1,9 @@
 // client/src/constants/config.js
 
 const config = {
-  API_BASE_URL: import.meta.env.VITE_API_URL || 'https://file-explorer-api.onrender.com/api',
+  API_BASE_URL: import.meta.env.DEV 
+    ? 'http://localhost:5000/api' 
+    : (import.meta.env.VITE_API_URL || 'https://file-explorer-api.onrender.com/api'),
   ENDPOINTS: {
     ROOT: '/files/root',
     FILES: '/files',

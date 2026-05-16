@@ -5,6 +5,9 @@ import { faker } from '@faker-js/faker';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { Packr } from 'msgpackr';
+
+const packr = new Packr({ variableMapSize: true });
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -275,9 +278,13 @@ function createFolder(name, parentId, currentPath, blueprint) {
     children: null,
   };
 
+  // Apply a 10x scaling factor for FAANG-level load testing
+  const SCALE = 10;
+
   for (const [key, value] of Object.entries(blueprint)) {
     if (key === '') {
-      for (let i = 0; i < value.files; i++) {
+      const totalFiles = (value.files || 0) * SCALE;
+      for (let i = 0; i < totalFiles; i++) {
         const ext = value.exts[Math.floor(Math.random() * value.exts.length)];
         childIds.push(createFile(id, ext, folderPath));
       }
@@ -296,7 +303,8 @@ function createFolder(name, parentId, currentPath, blueprint) {
         children: null,
       };
 
-      for (let i = 0; i < value.files; i++) {
+      const totalFiles = (value.files || 0) * SCALE;
+      for (let i = 0; i < totalFiles; i++) {
         const ext = value.exts[Math.floor(Math.random() * value.exts.length)];
         subChildIds.push(createFile(subId, ext, subPath));
       }
@@ -339,8 +347,8 @@ const dataDir = path.resolve(__dirname, '../data');
 if (!fs.existsSync(dataDir)) {
   fs.mkdirSync(dataDir, { recursive: true });
 }
-const outPath = path.resolve(dataDir, 'fileTree.json');
-fs.writeFileSync(outPath, JSON.stringify(flatMap, null, 2));
+const outPath = path.resolve(dataDir, 'fileTree.pack');
+fs.writeFileSync(outPath, packr.pack(flatMap));
 
 console.log(`✅ Done! Generated ${totalNodes} nodes`);
-console.log(`📁 Saved to: server/data/fileTree.json`);
+console.log(`📁 Saved to: server/data/fileTree.pack`);

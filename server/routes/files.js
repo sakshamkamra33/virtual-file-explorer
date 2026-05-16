@@ -3,13 +3,14 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { Packr } from 'msgpackr';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Load the generated fake data once into memory
-const dataPath = path.resolve(__dirname, '../data/fileTree.json');
-const fileTree = JSON.parse(fs.readFileSync(dataPath, 'utf-8'));
+const packr = new Packr({ variableMapSize: true });
+const dataPath = path.resolve(__dirname, '../data/fileTree.pack');
+const fileTree = packr.unpack(fs.readFileSync(dataPath));
 
 // GET /api/files?path=/
 // GET /api/files?id=node_1
