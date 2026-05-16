@@ -35,46 +35,69 @@ const SORTS = [
   { label: 'Date ↓',     value: 'date_desc' },
 ];
 
-// Flatten tree into array for virtual list
-const flattenTree = (nodeId, nodes, expandedIds, depth = 0) => {
-  const node = nodes[nodeId];
-  if (!node) return [];
-  const result = [{ ...node, _depth: depth }];
-  if (node.type === 'folder' && expandedIds.has(node.id) && node.children) {
-    for (const childId of node.children) {
-      result.push(...flattenTree(childId, nodes, expandedIds, depth + 1));
-    }
-  }
-  return result;
-};
-
-// Apply filter to flat nodes
-const applyFilter = (nodes, filter) => {
-  if (filter === 'all') return nodes;
+// Get sorted and filtered children for a specific folder
+const getSortedChildren = (node, nodes, filter, sort) => {
+  if (!node || !node.children) return [];
+  
   const exts = CATEGORY_EXTS[filter] || [];
-  return nodes.filter(n => {
-    if (n.type === 'folder') return true;
-    return exts.includes(n.extension || '');
-  });
-};
+  
+  // Map IDs to node objects and apply filter
+  let childrenNodes = node.children
+    .map(id => nodes[id])
+    .filter(Boolean)
+    .filter(n => {
+      if (filter === 'all') return true;
+      if (n.type === 'folder') return true; // Keep folders so user can navigate
+      return exts.includes(n.extension || '');
+    });
 
-// Apply sort to flat nodes (folders always first)
-const applySort = (nodes, sort) => {
-  return [...nodes].sort((a, b) => {
-    // Folders always on top
+  // Sort the children locally within this folder
+  return childrenNodes.sort((a, b) => {
+    // 1. Always pin "Internal Storage" to the very top (only applies at root level)
+    if (a.name === 'Internal Storage' && b.name !== 'Internal Storage') return -1;
+    if (b.name === 'Internal Storage' && a.name !== 'Internal Storage') return 1;
+
+    // 2. Folders always go above files
     if (a.type === 'folder' && b.type !== 'folder') return -1;
     if (a.type !== 'folder' && b.type === 'folder') return 1;
 
+    // 3. User selected sorting
     switch (sort) {
       case 'name_asc':  return a.name.localeCompare(b.name);
       case 'name_desc': return b.name.localeCompare(a.name);
       case 'size_asc':  return (a.size || 0) - (b.size || 0);
       case 'size_desc': return (b.size || 0) - (a.size || 0);
-      case 'date_asc':  return new Date(a.lastModified) - new Date(b.lastModified);
-      case 'date_desc': return new Date(b.lastModified) - new Date(a.lastModified);
+      case 'date_asc':  return new Date(a.lastModified || 0) - new Date(b.lastModified || 0);
+      case 'date_desc': return new Date(b.lastModified || 0) - new Date(a.lastModified || 0);
       default: return 0;
     }
   });
+};
+
+// Recursively build the flattened array for the UI, respecting folder sorting
+const buildFlatTree = (nodeId, nodes, expandedIds, filter, sort, depth = 0) => {
+  const node = nodes[nodeId];
+  if (!node) return [];
+
+  const result = [];
+  
+  // Don't render the artificial "root" container
+  if (nodeId !== 'root') {
+    result.push({ ...node, _depth: depth });
+  }
+
+  // If folder is expanded (or is the root), process its children
+  const isExpanded = nodeId === 'root' || expandedIds.has(node.id);
+  if (node.type === 'folder' && isExpanded) {
+    const sortedChildren = getSortedChildren(node, nodes, filter, sort);
+    const childDepth = nodeId === 'root' ? 0 : depth + 1;
+    
+    for (const child of sortedChildren) {
+      result.push(...buildFlatTree(child.id, nodes, expandedIds, filter, sort, childDepth));
+    }
+  }
+
+  return result;
 };
 
 const FileTree = () => {
@@ -94,9 +117,8 @@ const FileTree = () => {
 
   const flatNodes = useMemo(() => {
     if (!nodes['root']) return [];
-    const flat = flattenTree('root', nodes, expandedIds);
-    const filtered = applyFilter(flat, activeFilter);
-    return applySort(filtered, activeSort);
+    // Correctly build the flat list by sorting folders individually before combining
+    return buildFlatTree('root', nodes, expandedIds, activeFilter, activeSort);
   }, [nodes, expandedIds, activeFilter, activeSort]);
 
   if (error) {
