@@ -3,7 +3,10 @@ import config from '../../constants/config.js';
 import Spinner from '../UI/Spinner.jsx';
 
 const PerformanceAnalyzer = ({ onClose }) => {
-  const [files, setFiles] = useState(50000);
+  const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+  const MAX_FILES = isLocalhost ? 200000 : 50000;
+
+  const [files, setFiles] = useState(isLocalhost ? 50000 : 30000);
   const [depth, setDepth] = useState(5);
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState(null);
@@ -66,6 +69,21 @@ const PerformanceAnalyzer = ({ onClose }) => {
         <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
           
           <div style={{ background: 'rgba(0,0,0,0.3)', padding: '16px', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.05)' }}>
+            
+            {!isLocalhost && (
+              <div style={{ 
+                background: 'rgba(255, 165, 0, 0.1)', border: '1px solid rgba(255, 165, 0, 0.3)', 
+                padding: '12px 16px', borderRadius: '8px', color: '#ffb732', fontSize: '13px', 
+                display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px', lineHeight: 1.4 
+              }}>
+                <span style={{ fontSize: '16px' }}>⚠️</span>
+                <span>
+                  <strong>Cloud Hardware Limit:</strong> This free demo server only has 512MB RAM. 
+                  The slider is capped at 50,000 files to prevent Out-of-Memory crashes. Clone the repo and run locally to test up to 200k+!
+                </span>
+              </div>
+            )}
+
             <p style={{ margin: '0 0 16px 0', fontSize: '13px', color: '#aaa', lineHeight: 1.5 }}>
               Configure the parameters below to dynamically generate a massive file system in memory. 
               The backend will race standard <strong>JSON</strong> against <strong>Binary MessagePack</strong> to prove the performance difference.
@@ -77,7 +95,7 @@ const PerformanceAnalyzer = ({ onClose }) => {
                   Number of Files: <strong style={{ color: '#fff' }}>{files.toLocaleString()}</strong>
                 </label>
                 <input 
-                  type="range" min="1000" max="200000" step="1000" 
+                  type="range" min="1000" max={MAX_FILES} step="1000" 
                   value={files} onChange={e => setFiles(Number(e.target.value))}
                   style={{ width: '100%', accentColor: '#61dafb' }}
                 />
