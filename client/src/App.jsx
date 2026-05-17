@@ -7,12 +7,14 @@ import FileDetails from './components/FileDetails/FileDetails.jsx';
 import Dashboard from './components/Dashboard/Dashboard.jsx';
 import DuplicateFinder from './components/Dashboard/DuplicateFinder.jsx';
 import StorageCleaner from './components/Dashboard/StorageCleaner.jsx';
+import PerformanceAnalyzer from './components/Dashboard/PerformanceAnalyzer.jsx';
 import useUIStore from './store/uiStore.js';
 
 const App = () => {
   const [showDashboard, setShowDashboard] = useState(false);
   const [showDuplicates, setShowDuplicates] = useState(false);
   const [showCleaner, setShowCleaner] = useState(false);
+  const [showBenchmark, setShowBenchmark] = useState(false);
   const [darkMode, setDarkMode] = useState(true);
   
   // Responsive states
@@ -63,6 +65,7 @@ const App = () => {
       {showDashboard  && <Dashboard onClose={() => setShowDashboard(false)} />}
       {showDuplicates && <DuplicateFinder onClose={() => setShowDuplicates(false)} />}
       {showCleaner    && <StorageCleaner onClose={() => setShowCleaner(false)} />}
+      {showBenchmark  && <PerformanceAnalyzer onClose={() => setShowBenchmark(false)} />}
 
       {/* Left Panel (Sidebar) */}
       <div 
@@ -106,6 +109,9 @@ const App = () => {
               
               {!isMobile && (
                 <>
+                  <button className="action-btn" onClick={() => setShowBenchmark(true)} style={{ background: theme.inputBg, borderColor: theme.border, color: theme.text }}>
+                    ⚡ Bench
+                  </button>
                   <button className="action-btn" onClick={() => setShowCleaner(true)} style={{ background: theme.inputBg, borderColor: theme.border, color: theme.text }}>
                     🧹 Clean
                   </button>
@@ -121,8 +127,8 @@ const App = () => {
           {/* Mobile specific quick actions */}
           {isMobile && (
             <div style={{ display: 'flex', gap: '8px', marginTop: '12px' }}>
+              <button className="action-btn" onClick={() => setShowBenchmark(true)} style={{ flex: 1, background: theme.inputBg, borderColor: theme.border, color: theme.text }}>⚡ Bench</button>
               <button className="action-btn" onClick={() => setShowCleaner(true)} style={{ flex: 1, background: theme.inputBg, borderColor: theme.border, color: theme.text }}>🧹 Clean</button>
-              <button className="action-btn" onClick={() => setShowDuplicates(true)} style={{ flex: 1, background: theme.inputBg, borderColor: theme.border, color: theme.text }}>🔍 Dupes</button>
               <button className="action-btn" onClick={() => setShowDashboard(true)} style={{ flex: 1, background: theme.inputBg, borderColor: theme.border, color: theme.text }}>📊 Stats</button>
             </div>
           )}

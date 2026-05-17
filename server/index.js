@@ -38,6 +38,10 @@ app.get('/api/search', searchFiles);
 // Stats
 app.get('/api/stats', getStats);
 
+// Benchmark
+import { runBenchmark } from './routes/benchmark.js';
+app.get('/api/benchmark', runBenchmark);
+
 // ─── Error Handling ───────────────────────────────────
 app.use(notFound);
 app.use(errorHandler);
