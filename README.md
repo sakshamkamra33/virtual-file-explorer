@@ -3,9 +3,9 @@
 A high-performance, full-stack Virtual File Explorer designed to handle **100,000+ files and folders** seamlessly in the browser. Built to demonstrate FAANG-level engineering principles, this project prioritizes extreme network optimization, memory safety, and 60FPS rendering.
 
 [![Live Demo](https://img.shields.io/badge/Live_Demo-Vercel-000000?style=for-the-badge&logo=vercel)](https://virtual-file-explorer.vercel.app)
-![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=node.js&logoColor=white)
-![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
-![MessagePack](https://img.shields.io/badge/MessagePack-binary-blue?style=for-the-badge)
+[![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org/)
+[![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://react.dev/)
+[![MessagePack](https://img.shields.io/badge/MessagePack-binary-blue?style=for-the-badge)](https://msgpack.org/)
 
 ---
 
