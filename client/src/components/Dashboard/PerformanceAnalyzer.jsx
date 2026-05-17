@@ -17,7 +17,8 @@ const PerformanceAnalyzer = ({ onClose }) => {
       const res = await fetch(`${config.API_BASE_URL}/benchmark?files=${files}&depth=${depth}`);
       if (!res.ok) {
         const err = await res.json().catch(() => ({}));
-        throw new Error(err.error || `HTTP error ${res.status}`);
+        const errorMsg = err.error?.message || err.error || `HTTP error ${res.status}`;
+        throw new Error(typeof errorMsg === 'object' ? JSON.stringify(errorMsg) : errorMsg);
       }
       const data = await res.json();
       setResults(data);
