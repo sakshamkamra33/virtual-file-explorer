@@ -120,4 +120,16 @@ Visit `http://localhost:5173` in your browser.
 > *Benchmarks generated via the built-in `/api/benchmark` route on a 50,000 node generated tree.*
 
 ---
+
+## 👨‍💻 Author & Links
+
+**Saksham Kamra**
+*   **GitHub Profile:** [@sakshamkamra33](https://github.com/sakshamkamra33)
+*   **Repository:** [File Explorer Project](https://github.com/sakshamkamra33/file_explorer_project)
+
+## 📄 License
+
+This project is open-source and available under the [MIT License](LICENSE).
+
+---
 *Built with ❤️ focusing on low-level performance and modern web design.*
